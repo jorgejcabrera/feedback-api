@@ -12,6 +12,7 @@ services:
     - .:/vol/development
     depends_on:
     - mysqldbserver
+
   mysqldbserver:
     image: mysql:5.7
     restart: always
@@ -29,7 +30,7 @@ services:
     - my-db:/var/lib/mysql
 
   migration:
-    build: ./src/main/resources
+    build: ./src/main/resources/flyway_mysql_client
     container_name: flyway_migration
     environment:
       MYSQL_DATABASE: 'db'
