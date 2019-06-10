@@ -11,3 +11,4 @@ CREATE TABLE `feedback` (
   `store_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`order_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8;
+

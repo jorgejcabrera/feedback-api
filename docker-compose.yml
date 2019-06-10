@@ -14,8 +14,8 @@ services:
     - '3306:3306'
     networks:
     - mt-network
-    volumes:
-    - my-db:/var/lib/mysql
+  #  volumes:
+  #  - my-db:/var/lib/mysql
 
   #springappserver:
   #  build:

@@ -2,6 +2,7 @@ package com.feedback.api.service;
 
 import com.feedback.api.builder.FeedbackBuilder;
 import com.feedback.api.dto.FeedbackDTO;
+import com.feedback.api.enums.Score;
 import com.feedback.api.exception.BadRequestException;
 import com.feedback.api.exception.EntityNotFoundException;
 import com.feedback.api.model.Feedback;
@@ -20,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -101,6 +104,29 @@ public class FeedbackServiceTest {
 
     // then
     assertThat(feedbackService.update(orderId, body).getComment()).isEqualTo("It is a new comment");
+  }
+
+  @Test
+  public void when_feedbackHasDiamondScore_then_shouldReturnValidAverageScore() {
+    Long orderId = ++nextOrderId;
+    Feedback feedback =
+            new FeedbackBuilder()
+                    .withComment("It was a previous comment.")
+                    .withOrderId(orderId)
+                    .withScore(Score.DIAMOND)
+                    .build();
+    Feedback otherFeedback =
+            new FeedbackBuilder()
+                    .withComment("It was a previous comment.")
+                    .withOrderId(orderId)
+                    .withScore(Score.DIAMOND)
+                    .build();
+    List<Feedback> feedbackList = Arrays.asList(feedback, otherFeedback);
+
+    // then
+    int sum = feedbackList.parallelStream().map(feedback1 -> feedback.getScore().getValue()).reduce(0,Integer::sum);
+
+    assertThat(Score.DIAMOND).isEqualTo(Score.getScore(Math.round(sum/feedbackList.size())));
   }
 
   @Test
