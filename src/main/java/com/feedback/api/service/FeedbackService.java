@@ -67,21 +67,21 @@ public class FeedbackService {
 
   public List<Feedback> getAllFeedbacksByBuyerIdBetween(
       Long userId, Date from, Date to, Pageable pageable) {
-    List<Feedback> feedbacks =
-        feedbackRepository.findByBuyerIdAndCreatedDateBetween(userId, from, to, pageable).stream()
-            .filter(feedback -> feedback.getStatus() != FeedbackStatus.DELETE)
-            .collect(Collectors.toList());
-    if (feedbacks.isEmpty()) throw new EntityNotFoundException(USER, userId.toString());
-    return feedbacks;
+    if (!feedbackRepository.existsBuyerId(userId))
+      throw new EntityNotFoundException(USER, userId.toString());
+    return feedbackRepository.findByBuyerIdAndCreatedDateBetween(userId, from, to, pageable)
+        .stream()
+        .filter(feedback -> feedback.getStatus() != FeedbackStatus.DELETE)
+        .collect(Collectors.toList());
   }
 
   public List<Feedback> getAllFeedbacksByStoreIdBetween(
       String storeId, Date from, Date to, Pageable pageable) {
-    List<Feedback> feedbacks =
-        feedbackRepository.findByStoreIdAndCreatedDateBetween(storeId, from, to, pageable).stream()
-            .filter(feedback -> feedback.getStatus() != FeedbackStatus.DELETE)
-            .collect(Collectors.toList());
-    if (feedbacks.isEmpty()) throw new EntityNotFoundException(STORE, storeId);
-    return feedbacks;
+    if (!feedbackRepository.existsStoreId(storeId))
+      throw new EntityNotFoundException(STORE, storeId);
+    return feedbackRepository.findByStoreIdAndCreatedDateBetween(storeId, from, to, pageable)
+        .stream()
+        .filter(feedback -> feedback.getStatus() != FeedbackStatus.DELETE)
+        .collect(Collectors.toList());
   }
 }

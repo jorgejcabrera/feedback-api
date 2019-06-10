@@ -107,9 +107,21 @@ public class FeedbackServiceTest {
   public void when_tryToGetFeedbackByUserIdWithoutAnyFeedback_thenShouldReturnNotFoundException() {
     // given
     exception.expect(EntityNotFoundException.class);
-    exception.expectMessage(
-            String.format("%s with id %s not found.", "User", ++nextOrderId));
+    exception.expectMessage(String.format("%s with id %s not found.", "User", ++nextOrderId));
     Long userId = nextOrderId;
+    Pageable pageable = PageRequest.of(0, 2);
+
+    // when
+    when(feedbackRepository.existsBuyerId(Mockito.anyLong())).thenReturn(false);
+
+    // then
+    feedbackService.getAllFeedbacksByBuyerIdBetween(userId, from, to, pageable);
+  }
+
+  @Test
+  public void when_thereIsNotFeedbackForUser_then_shouldWorkOk() {
+    // given
+    Long userId = ++nextOrderId;
     Pageable pageable = PageRequest.of(0, 2);
 
     // when
@@ -119,9 +131,11 @@ public class FeedbackServiceTest {
             Mockito.any(Date.class),
             Mockito.any(Pageable.class)))
         .thenReturn(Page.empty());
+    when(feedbackRepository.existsBuyerId(Mockito.anyLong())).thenReturn(true);
 
     // then
-    feedbackService.getAllFeedbacksByBuyerIdBetween(userId, from, to, pageable);
+    assertThat(feedbackService.getAllFeedbacksByBuyerIdBetween(userId, from, to, pageable))
+        .isEmpty();
   }
 
   @Test
@@ -129,17 +143,11 @@ public class FeedbackServiceTest {
     // given
     String storeId = "AR1";
     exception.expect(EntityNotFoundException.class);
-    exception.expectMessage(
-            String.format("%s with id %s not found.", "Store", storeId));
+    exception.expectMessage(String.format("%s with id %s not found.", "Store", storeId));
     Pageable pageable = PageRequest.of(0, 2);
 
     // when
-    when(feedbackRepository.findByStoreIdAndCreatedDateBetween(
-            Mockito.anyString(),
-            Mockito.any(Date.class),
-            Mockito.any(Date.class),
-            Mockito.any(Pageable.class)))
-            .thenReturn(Page.empty());
+    when(feedbackRepository.existsStoreId(storeId)).thenReturn(false);
 
     // then
     feedbackService.getAllFeedbacksByStoreIdBetween(storeId, from, to, pageable);

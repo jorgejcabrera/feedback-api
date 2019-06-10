@@ -14,17 +14,22 @@ import javax.persistence.Table;
 @Table(name = "feedback")
 public class Feedback extends Auditable {
 
-  @Id @Column private Long orderId;
-  @Column private Long sellerId;
-  @Column private Long buyerId;
-  @Column private Long itemId;
-  @Column private String comment;
-  @Column private String storeId;
-
+  @Id
+  @Column(name = "order_id")
+  private Long orderId;
+  @Column(name = "seller_id")
+  private Long sellerId;
+  @Column(name = "buyer_id")
+  private Long buyerId;
+  @Column(name = "item_id")
+  private Long itemId;
+  @Column(name = "comment")
+  private String comment;
+  @Column(name = "store_id")
+  private String storeId;
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
   private FeedbackStatus status;
-
   @Column(name = "score", nullable = false)
   @Enumerated(EnumType.STRING)
   private Score score;
