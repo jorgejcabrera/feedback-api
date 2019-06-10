@@ -1,6 +1,19 @@
-version: '3.3'
+version: '3'
 services:
-  db:
+
+  springappserver:
+    build:
+      context: .
+    ports:
+    - "8080:8080"
+    networks:
+    - mt-network
+    volumes:
+    - .:/vol/development
+    depends_on:
+    - mysqldbserver
+
+  mysqldbserver:
     image: mysql:5.7
     restart: always
     container_name: feedback_db
@@ -11,10 +24,14 @@ services:
       MYSQL_ROOT_PASSWORD: 'password'
     ports:
     - '3306:3306'
-    expose:
-    - '3306'
+    networks:
+    - mt-network
     volumes:
     - my-db:/var/lib/mysql
+
+networks:
+  mt-network:
+    driver: bridge
 
 volumes:
   my-db:
