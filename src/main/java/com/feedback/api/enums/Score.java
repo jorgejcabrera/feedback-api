@@ -12,4 +12,16 @@ public enum Score {
   Score(int score) {
     this.value = score;
   }
+
+  public int getValue() {
+    return value;
+  }
+
+  public static Score getScore(int value) {
+    Score s = null;
+    for (Score score : Score.values()) {
+      if (score.getValue() == value) s = score;
+    }
+    return s;
+  }
 }

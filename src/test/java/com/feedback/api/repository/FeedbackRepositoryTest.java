@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -110,6 +111,65 @@ public class FeedbackRepositoryTest {
                 .stream()
                 .collect(Collectors.toList()))
         .hasSize(1);
+  }
+
+  @Test
+  public void when_getAverageFeedbackScore_then_shouldWorkOk() {
+    // given
+    Long buyerId = 1L;
+
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    oneFeedback.setBuyerId(buyerId);
+    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.ACTIVE);
+    twoFeedback.setBuyerId(2L);
+    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.ACTIVE);
+    threeFeedback.setBuyerId(buyerId);
+    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.ACTIVE);
+    fourFeedback.setBuyerId(buyerId);
+    List<Feedback> allFeedbacks =
+        Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);
+
+    // when
+    feedbackRepository.saveAll(allFeedbacks);
+    List<Feedback> feedbacks =
+        feedbackRepository.findAllByStoreIdAndStatus(storeId, FeedbackStatus.ACTIVE);
+    int sum =
+        feedbacks
+            .parallelStream()
+            .map(feedback -> feedback.getScore().getValue())
+            .reduce(0, Integer::sum);
+    int size = feedbacks.size();
+
+    // then
+    assertThat(Math.floorDiv(sum, size)).isEqualTo(2);
+    assertThat(Score.getScore(2)).isEqualTo(Score.SILVER);
+  }
+
+  @Test
+  public void when_getAllDistinctStoresFromFeedbackTable_thenShouldWorkOk() {
+    // given
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    oneFeedback.setStoreId("AR1");
+    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.ACTIVE);
+    twoFeedback.setStoreId("AR2");
+    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.ACTIVE);
+    threeFeedback.setStoreId("AR3");
+    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.ACTIVE);
+    fourFeedback.setStoreId("AR4");
+    List<Feedback> allFeedbacks =
+        Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);
+    Pageable pageable = PageRequest.of(0, 10);
+
+    // when
+    feedbackRepository.saveAll(allFeedbacks);
+    Page<String> stores = feedbackRepository.findAllStoreId(pageable);
+
+    // then
+    assertThat(stores.stream().collect(Collectors.toList())).isNotEmpty();
+    assertThat(stores.stream().collect(Collectors.toList()).contains("AR1")).isTrue();
+    assertThat(stores.stream().collect(Collectors.toList()).contains("AR2")).isTrue();
+    assertThat(stores.stream().collect(Collectors.toList()).contains("AR3")).isTrue();
+    assertThat(stores.stream().collect(Collectors.toList()).contains("AR4")).isTrue();
   }
 
   public Feedback buildFeedback(Score score, FeedbackStatus status) {

@@ -1,18 +1,6 @@
 version: '3'
 services:
 
-  springappserver:
-    build:
-      context: .
-    ports:
-    - "8080:8080"
-    networks:
-    - mt-network
-    volumes:
-    - .:/vol/development
-    depends_on:
-    - mysqldbserver
-
   mysqldbserver:
     image: mysql:5.7
     restart: always
@@ -29,23 +17,34 @@ services:
     volumes:
     - my-db:/var/lib/mysql
 
-  migration:
-    build: ./src/main/resources/flyway_mysql_client
-    container_name: flyway_migration
-    environment:
-      MYSQL_DATABASE: 'db'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
-    networks:
-    - mt-network
-    volumes:
-    - ../src/main/resources/sql:/flyway/sql
-    entrypoint: ["bash", "/flyway/bin/wait-for-mysql.sh", "mysqldbserver", "--", "flyway"]
-    command: -url=jdbc:mysql://mysqldbserver:3306/db?allowPublicKeyRetrieval=true&useSSL=false -user=user -password=password migrate
-    depends_on:
-    - mysqldbserver
+  #springappserver:
+  #  build:
+  #    context: .
+  #  ports:
+  #  - "8080:8080"
+  #  networks:
+  #  - mt-network
+  #  volumes:
+  #  - .:/vol/development
+  #  depends_on:
+  #  - mysqldbserver
 
+  #migration:
+  #  build: ./src/main/resources/flyway_mysql_migration
+  #  container_name: flyway_migration
+  #  environment:
+  #    MYSQL_DATABASE: 'db'
+  #    MYSQL_USER: 'user'
+  #    MYSQL_PASSWORD: 'password'
+  #    MYSQL_ROOT_PASSWORD: 'password'
+  #  networks:
+  #  - mt-network
+  #  volumes:
+  #  - ../src/main/resources/sql:/flyway/sql
+  #  entrypoint: ["bash", "/flyway/bin/wait-for-mysql.sh", "mysqldbserver", "--", "flyway"]
+  #  command: -url=jdbc:mysql://mysqldbserver:3306/db?allowPublicKeyRetrieval=true&useSSL=false -user=user -password=password migrate
+  #  depends_on:
+  #  - mysqldbserver
 
 networks:
   mt-network:

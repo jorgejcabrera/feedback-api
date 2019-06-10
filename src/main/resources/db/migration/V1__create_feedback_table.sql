@@ -10,4 +10,4 @@ CREATE TABLE `feedback` (
   `status` varchar(255) DEFAULT NULL,
   `store_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8;
