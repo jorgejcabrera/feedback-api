@@ -43,9 +43,8 @@ public class FeedbackService {
             .withScore(body.getScore())
             .withComment(body.getComment())
             .build();
-    feedbackRepository.save(newFeedback);
     feedbackMessageSender.sendFeedback(newFeedback);
-    return newFeedback;
+    return feedbackRepository.save(newFeedback);
   }
 
   public Feedback retrieve(Long id) {
@@ -68,9 +67,8 @@ public class FeedbackService {
     if (body.getScore() != null) {
       updateStatus(feedback, body.getScore());
     }
-    feedbackRepository.save(feedback);
     feedbackMessageSender.sendFeedback(feedback);
-    return feedback;
+    return feedbackRepository.save(feedback);
   }
 
   @Transactional

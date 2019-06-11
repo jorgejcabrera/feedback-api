@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -58,10 +60,10 @@ public class FeedbackController {
 
   @GetMapping(path = "/user/{userId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Feedback>> getFeedbacksByBuyer(
-      @Valid @NotBlank @PathVariable Long userId,
-      @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-      @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-      Pageable pageable) {
+          @Valid @NotBlank @PathVariable Long userId,
+          @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+          @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+          Pageable pageable) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(feedbackService.getAllFeedbacksByBuyerIdBetween(userId, from, to, pageable));
   }
@@ -69,8 +71,8 @@ public class FeedbackController {
   @GetMapping(path = "/store/{storeId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Feedback>> getFeedbacksByStore(
       @Valid @NotBlank @PathVariable String storeId,
-      @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-      @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+      @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+      @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
       Pageable pageable) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(feedbackService.getAllFeedbacksByStoreIdBetween(storeId, from, to, pageable));
