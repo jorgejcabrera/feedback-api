@@ -43,20 +43,20 @@ public class FeedbackRepositoryTest {
 
   @Test
   public void when_createFeedbackEntity_thenShouldWorkOk() {
-    Feedback feedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback feedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     feedbackRepository.save(feedback);
     assertThat(feedbackRepository.existsById(feedback.getOrderId())).isTrue();
   }
 
   @Test
   public void when_createFeedbacksEntity_thenShouldReturnAllList() {
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE));
+    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
+    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
+    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
     feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.DELETE));
     feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.DELETE));
 
-    assertThat(feedbackRepository.findAllByStoreIdAndStatus("AR1", FeedbackStatus.ACTIVE))
+    assertThat(feedbackRepository.findAllByStoreIdAndStatus("AR1", FeedbackStatus.PENDING_REPORT))
         .hasSize(3);
     assertThat(feedbackRepository.findAllByStoreIdAndStatus("AR1", FeedbackStatus.DELETE))
         .hasSize(2);
@@ -67,11 +67,11 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
     Pageable pageable = PageRequest.of(0, 2);
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
-    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
-    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setBuyerId(buyerId);
     List<Feedback> allFeedbacks = Arrays.asList(oneFeedback, twoFeedback, threeFeedback);
 
@@ -91,13 +91,13 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
     Pageable pageable = PageRequest.of(1, 2);
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
-    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
-    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setBuyerId(buyerId);
-    Feedback fourFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback fourFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     fourFeedback.setBuyerId(buyerId);
     List<Feedback> allFeedbacks =
         Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);
@@ -118,13 +118,13 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
 
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
-    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.ACTIVE);
+    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
-    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.ACTIVE);
+    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setBuyerId(buyerId);
-    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.ACTIVE);
+    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.PENDING_REPORT);
     fourFeedback.setBuyerId(buyerId);
     List<Feedback> allFeedbacks =
         Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);
@@ -132,7 +132,7 @@ public class FeedbackRepositoryTest {
     // when
     feedbackRepository.saveAll(allFeedbacks);
     List<Feedback> feedbacks =
-        feedbackRepository.findAllByStoreIdAndStatus(storeId, FeedbackStatus.ACTIVE);
+        feedbackRepository.findAllByStoreIdAndStatus(storeId, FeedbackStatus.PENDING_REPORT);
     int sum =
         feedbacks
             .parallelStream()
@@ -148,13 +148,13 @@ public class FeedbackRepositoryTest {
   @Test
   public void when_getAllDistinctStoresFromFeedbackTable_thenShouldWorkOk() {
     // given
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.ACTIVE);
+    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setStoreId("AR1");
-    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.ACTIVE);
+    Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setStoreId("AR2");
-    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.ACTIVE);
+    Feedback threeFeedback = buildFeedback(Score.SILVER, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setStoreId("AR3");
-    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.ACTIVE);
+    Feedback fourFeedback = buildFeedback(Score.GOLD, FeedbackStatus.PENDING_REPORT);
     fourFeedback.setStoreId("AR4");
     List<Feedback> allFeedbacks =
         Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);

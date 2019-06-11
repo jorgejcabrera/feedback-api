@@ -1,12 +1,23 @@
 package com.feedback.api.dto;
 
+import com.feedback.api.enums.Score;
+
 public class FeedbackDTO {
 
   private String comment;
   private Long sellerId;
   private Long itemId;
+  private Score score;
 
   public FeedbackDTO() {}
+
+  public Score getScore() {
+    return score;
+  }
+
+  public void setScore(Score score) {
+    this.score = score;
+  }
 
   public FeedbackDTO(String comment) {
     this.comment = comment;

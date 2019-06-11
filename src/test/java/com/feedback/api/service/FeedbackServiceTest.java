@@ -2,6 +2,7 @@ package com.feedback.api.service;
 
 import com.feedback.api.builder.FeedbackBuilder;
 import com.feedback.api.dto.FeedbackDTO;
+import com.feedback.api.enums.FeedbackStatus;
 import com.feedback.api.enums.Score;
 import com.feedback.api.exception.BadRequestException;
 import com.feedback.api.exception.EntityNotFoundException;
@@ -73,6 +74,21 @@ public class FeedbackServiceTest {
   }
 
   @Test
+  public void when_feedbackHasDeleteStatus_then_shouldNotBeReturned() {
+    exception.expect(EntityNotFoundException.class);
+    exception.expectMessage(
+        String.format("%s with id %s not found.", Feedback.class.getSimpleName(), ++nextOrderId));
+    Feedback feedback = new Feedback();
+    feedback.setStatus(FeedbackStatus.DELETE);
+
+    // when
+    when(feedbackRepository.findById(nextOrderId)).thenReturn(Optional.of(feedback));
+
+    // then
+    feedbackService.retrieve(nextOrderId);
+  }
+
+  @Test
   public void when_tryToUpdateAnEntityThatNotExists_then_shouldReturnNotFoundException() {
     exception.expect(EntityNotFoundException.class);
     exception.expectMessage(
@@ -110,23 +126,27 @@ public class FeedbackServiceTest {
   public void when_feedbackHasDiamondScore_then_shouldReturnValidAverageScore() {
     Long orderId = ++nextOrderId;
     Feedback feedback =
-            new FeedbackBuilder()
-                    .withComment("It was a previous comment.")
-                    .withOrderId(orderId)
-                    .withScore(Score.DIAMOND)
-                    .build();
+        new FeedbackBuilder()
+            .withComment("It was a previous comment.")
+            .withOrderId(orderId)
+            .withScore(Score.DIAMOND)
+            .build();
     Feedback otherFeedback =
-            new FeedbackBuilder()
-                    .withComment("It was a previous comment.")
-                    .withOrderId(orderId)
-                    .withScore(Score.DIAMOND)
-                    .build();
+        new FeedbackBuilder()
+            .withComment("It was a previous comment.")
+            .withOrderId(orderId)
+            .withScore(Score.DIAMOND)
+            .build();
     List<Feedback> feedbackList = Arrays.asList(feedback, otherFeedback);
 
     // then
-    int sum = feedbackList.parallelStream().map(feedback1 -> feedback.getScore().getValue()).reduce(0,Integer::sum);
+    int sum =
+        feedbackList
+            .parallelStream()
+            .map(feedback1 -> feedback.getScore().getValue())
+            .reduce(0, Integer::sum);
 
-    assertThat(Score.DIAMOND).isEqualTo(Score.getScore(Math.round(sum/feedbackList.size())));
+    assertThat(Score.DIAMOND).isEqualTo(Score.getScore(Math.round(sum / feedbackList.size())));
   }
 
   @Test

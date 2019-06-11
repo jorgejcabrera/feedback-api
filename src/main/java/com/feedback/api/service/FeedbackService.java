@@ -43,20 +43,25 @@ public class FeedbackService {
   }
 
   public Feedback retrieve(Long id) {
-    return feedbackRepository
-        .findById(id)
-        .orElseThrow(
-            () -> new EntityNotFoundException(Feedback.class.getSimpleName(), id.toString()));
-  }
-
-  public Feedback update(Long id, FeedbackDTO body) {
     Feedback feedback =
         feedbackRepository
             .findById(id)
             .orElseThrow(
                 () -> new EntityNotFoundException(Feedback.class.getSimpleName(), id.toString()));
+    if (feedback.getStatus() == FeedbackStatus.DELETE)
+      throw new EntityNotFoundException(Feedback.class.getSimpleName(), id.toString());
+
+    return feedback;
+  }
+
+  public Feedback update(Long id, FeedbackDTO body) {
+    Feedback feedback = retrieve(id);
     String comment = body.getComment() != null ? body.getComment().trim() : null;
     feedback.setComment(comment);
+    if (body.getScore() != null) {
+      feedback.setScore(body.getScore());
+      feedback.setStatus(FeedbackStatus.PENDING_REPORT);
+    }
     return feedback;
   }
 

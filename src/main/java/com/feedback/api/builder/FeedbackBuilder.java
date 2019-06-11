@@ -53,7 +53,7 @@ public class FeedbackBuilder {
 
   public Feedback build() {
     Feedback feedback = new Feedback();
-    feedback.setStatus(FeedbackStatus.ACTIVE);
+    feedback.setStatus(FeedbackStatus.PENDING_REPORT);
     feedback.setOrderId(this.orderId);
     feedback.setComment(this.comment);
     feedback.setSellerId(this.sellerId);

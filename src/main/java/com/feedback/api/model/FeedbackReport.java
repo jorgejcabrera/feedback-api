@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "feedback_report")
-public class FeedbackReport {
+public class FeedbackReport extends Auditable {
 
   @Id
   @Column(name = "store_id")
@@ -22,6 +22,7 @@ public class FeedbackReport {
   private Score rank;
 
   @Column(name = "last_rank")
+  @Enumerated(EnumType.STRING)
   private Score lastRank;
 
   public FeedbackReport() {}

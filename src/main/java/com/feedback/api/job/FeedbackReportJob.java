@@ -43,7 +43,8 @@ public class FeedbackReportJob {
           .forEach(
               storeId -> {
                 List<Feedback> feedbacks =
-                    feedbackRepository.findAllByStoreIdAndStatus(storeId, FeedbackStatus.ACTIVE);
+                    feedbackRepository.findAllByStoreIdAndStatus(
+                        storeId, FeedbackStatus.PENDING_REPORT);
                 int sum =
                     feedbacks
                         .parallelStream()
@@ -56,6 +57,14 @@ public class FeedbackReportJob {
                 feedbackReport.setRank(Score.getScore(Math.round(sum / size)));
                 feedbackReport.setLastRank(Score.getScore(Math.round(sum / size)));
                 feedbackReportRepository.save(feedbackReport);
+
+                feedbacks
+                    .parallelStream()
+                    .forEach(
+                        feedback -> {
+                          feedback.setStatus(FeedbackStatus.COMPLETED);
+                          feedbackRepository.save(feedback);
+                        });
               });
       page++;
       psize += psize;

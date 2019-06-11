@@ -1,6 +1,7 @@
 package com.feedback.api.enums;
 
 public enum FeedbackStatus {
-    ACTIVE,
-    DELETE
+    PENDING_REPORT,
+    DELETE,
+    COMPLETED
 }
