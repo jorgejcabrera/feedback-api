@@ -1,9 +1,7 @@
 package com.feedback.api.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feedback.api.config.RabbitConfig;
-import com.feedback.api.job.FeedbackReportJob;
 import com.feedback.api.model.Feedback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -41,6 +41,7 @@ public class FeedbackServiceTest {
       Date.from(
           LocalDate.now().plusDays(31).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
   @Mock FeedbackRepository feedbackRepository;
+  @Mock FeedbackMessageSender feedbackMessageSender;
   @InjectMocks FeedbackService feedbackService;
   @Rule public ExpectedException exception = ExpectedException.none();
 
