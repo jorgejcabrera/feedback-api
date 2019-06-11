@@ -17,19 +17,26 @@ public class Feedback extends Auditable {
   @Id
   @Column(name = "order_id")
   private Long orderId;
+
   @Column(name = "seller_id")
   private Long sellerId;
+
   @Column(name = "buyer_id")
   private Long buyerId;
+
   @Column(name = "item_id")
   private Long itemId;
+
   @Column(name = "comment")
   private String comment;
+
   @Column(name = "store_id")
   private String storeId;
+
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
   private FeedbackStatus status;
+
   @Column(name = "score", nullable = false)
   @Enumerated(EnumType.STRING)
   private Score score;
@@ -96,6 +103,10 @@ public class Feedback extends Auditable {
 
   public void setComment(String comment) {
     this.comment = comment;
+  }
+
+  public boolean isReported() {
+    return this.status == FeedbackStatus.COMPLETED;
   }
 
   public Feedback() {}

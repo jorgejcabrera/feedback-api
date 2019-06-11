@@ -74,6 +74,21 @@ public class FeedbackServiceTest {
   }
 
   @Test
+  public void when_createFeedbackForOrderWithPreviousDeletedFeedback_then_shouldWorkOk() {
+    // given
+    Long orderId = ++nextOrderId;
+    Feedback feedback = new Feedback();
+    feedback.setStatus(FeedbackStatus.DELETE);
+    feedback.setOrderId(orderId);
+
+    // when
+    when(feedbackRepository.findById(nextOrderId)).thenReturn(Optional.of(feedback));
+
+    // then
+    feedbackService.create(feedback);
+  }
+
+  @Test
   public void when_feedbackHasDeleteStatus_then_shouldNotBeReturned() {
     exception.expect(EntityNotFoundException.class);
     exception.expectMessage(
@@ -119,7 +134,8 @@ public class FeedbackServiceTest {
     when(feedbackRepository.findById(nextOrderId)).thenReturn(Optional.of(feedback));
 
     // then
-    assertThat(feedbackService.update(orderId, body).getComment()).isEqualTo("It is a new comment");
+    feedbackService.update(orderId, body);
+    assertThat(feedback.getComment()).isEqualTo("It is a new comment");
   }
 
   @Test

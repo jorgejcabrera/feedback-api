@@ -1,11 +1,9 @@
 package com.feedback.api.job;
 
 import com.feedback.api.enums.FeedbackStatus;
-import com.feedback.api.enums.Score;
 import com.feedback.api.model.Feedback;
-import com.feedback.api.model.FeedbackReport;
-import com.feedback.api.repository.FeedbackReportRepository;
 import com.feedback.api.repository.FeedbackRepository;
+import com.feedback.api.service.FeedbackReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +21,16 @@ import java.util.stream.Collectors;
 public class FeedbackReportJob {
 
   @Autowired FeedbackRepository feedbackRepository;
-  @Autowired FeedbackReportRepository feedbackReportRepository;
+  @Autowired FeedbackReportService feedbackReportService;
   private static final Logger log = LoggerFactory.getLogger(FeedbackReportJob.class);
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-  @Scheduled(fixedDelay = 4000)
+  @Scheduled(fixedDelay = 8000)
   public void feedbackReport() {
-    log.info("Creating feedback report: {}", dateFormat.format(new Date()));
+    log.debug("Creating feedback report: {}", dateFormat.format(new Date()));
 
     int page = 0;
-    int psize = 1;
+    int psize = 50;
     Pageable pageable = PageRequest.of(page, psize);
     List<String> storeIds =
         feedbackRepository.findAllStoreId(pageable).stream().collect(Collectors.toList());
@@ -45,19 +43,7 @@ public class FeedbackReportJob {
                 List<Feedback> feedbacks =
                     feedbackRepository.findAllByStoreIdAndStatus(
                         storeId, FeedbackStatus.PENDING_REPORT);
-                int sum =
-                    feedbacks
-                        .parallelStream()
-                        .map(feedback -> feedback.getScore().getValue())
-                        .reduce(0, Integer::sum);
-                int size = feedbacks.size();
-
-                FeedbackReport feedbackReport = new FeedbackReport();
-                feedbackReport.setStoreId(storeId);
-                feedbackReport.setRank(Score.getScore(Math.round(sum / size)));
-                feedbackReport.setLastRank(Score.getScore(Math.round(sum / size)));
-                feedbackReportRepository.save(feedbackReport);
-
+                feedbackReportService.createReport(feedbacks, storeId);
                 feedbacks
                     .parallelStream()
                     .forEach(
