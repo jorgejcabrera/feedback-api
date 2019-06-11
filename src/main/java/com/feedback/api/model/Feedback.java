@@ -109,5 +109,19 @@ public class Feedback extends Auditable {
     return this.status == FeedbackStatus.COMPLETED;
   }
 
+  @Override
+  public String toString() {
+    return "Feedback{" +
+            "orderId=" + orderId +
+            ", sellerId=" + sellerId +
+            ", buyerId=" + buyerId +
+            ", itemId=" + itemId +
+            ", comment='" + comment + '\'' +
+            ", storeId='" + storeId + '\'' +
+            ", status=" + status +
+            ", score=" + score +
+            '}';
+  }
+
   public Feedback() {}
 }

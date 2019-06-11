@@ -2,9 +2,9 @@ version: '3'
 services:
 
   mysqldbserver:
+    container_name: feedback_db
     image: mysql:5.7
     restart: always
-    container_name: feedback_db
     environment:
       MYSQL_DATABASE: 'db'
       MYSQL_USER: 'user'
@@ -14,8 +14,26 @@ services:
     - '3306:3306'
     networks:
     - mt-network
-  #  volumes:
-  #  - my-db:/var/lib/mysql
+    #  volumes:
+    #  - my-db:/var/lib/mysql
+
+  memcached:
+    container_name: feedback_cache
+    image: sameersbn/memcached:1.5.6-1
+    ports:
+    - "11211:11211"
+    restart: always
+    networks:
+    - mt-network
+
+  rabbitmq:
+    container_name: feedback_queue
+    image: rabbitmq:management
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    networks:
+    - mt-network
 
   #springappserver:
   #  build:

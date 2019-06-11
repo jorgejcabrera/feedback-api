@@ -1,7 +1,7 @@
-# feedback-api API Rest
+# feedback-api 
 
 ## Overview
-API Rest for feedback-api.
+Feedback REST API.
 
 ## Requirements
 - Java

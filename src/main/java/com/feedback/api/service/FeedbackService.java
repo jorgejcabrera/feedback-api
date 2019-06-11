@@ -25,6 +25,7 @@ public class FeedbackService {
   private static String STORE = "Store";
   @Autowired FeedbackRepository feedbackRepository;
   @Autowired FeedbackReportService feedbackReportService;
+  @Autowired FeedbackMessageSender feedbackMessageSender;
 
   public Feedback create(Feedback body) {
     Optional<Feedback> opFeedback = feedbackRepository.findById(body.getOrderId());
@@ -42,7 +43,9 @@ public class FeedbackService {
             .withScore(body.getScore())
             .withComment(body.getComment())
             .build();
-    return feedbackRepository.save(newFeedback);
+    feedbackRepository.save(newFeedback);
+    feedbackMessageSender.sendFeedback(newFeedback);
+    return newFeedback;
   }
 
   public Feedback retrieve(Long id) {
@@ -65,7 +68,9 @@ public class FeedbackService {
     if (body.getScore() != null) {
       updateStatus(feedback, body.getScore());
     }
-    return feedbackRepository.save(feedback);
+    feedbackRepository.save(feedback);
+    feedbackMessageSender.sendFeedback(feedback);
+    return feedback;
   }
 
   @Transactional
@@ -75,6 +80,7 @@ public class FeedbackService {
       feedbackReportService.removeFeedbackFromReport(feedback);
     }
     feedback.setStatus(FeedbackStatus.DELETE);
+    feedbackMessageSender.sendFeedback(feedback);
   }
 
   public List<Feedback> getAllFeedbacksByBuyerIdBetween(
