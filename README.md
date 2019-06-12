@@ -30,7 +30,7 @@ $ mvn test
 Leaving feedback for purchase
 ```
 curl -X POST 
-  localhost:8080/feedback-api 
+  localhost:8080/feedback
   -H 'content-type: application/json'
   -d '{
 	"order_id": 13,
@@ -44,15 +44,17 @@ curl -X POST
 ```
 Get order feedback 
 ```
-curl -X GET localhost:8080/feedback-api/order/13
+curl -X GET localhost:8080/order/13/feedback
 ```
 Get user feedback list
 ```
 curl -X GET \
-    localhost:8080/feedback-api/user/1?from=2018-02-02&to=2019-12-12&page=0&size=2
+    localhost:8080/user/1/feedbacks?from=2018-02-02&to=2019-12-12&page=0&size=2
 ```
 Get store feedback list
 ```
 curl -X GET \
-    localhost:8080/feedback-api/store/AR4?from=2018-02-02&to=2019-12-12&page=0&size=2
+    localhost:8080/store/AR4/feedbacks?from=2018-02-02&to=2019-12-12&page=0&size=2
 ```
+
+For more details visit http://localhost:8080/swagger-ui.html#/feedback-controller

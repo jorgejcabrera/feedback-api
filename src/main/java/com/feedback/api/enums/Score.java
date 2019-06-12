@@ -1,7 +1,7 @@
 package com.feedback.api.enums;
 
 public enum Score {
-  BRONCE(1),
+  BRONZE(1),
   SILVER(2),
   GOLD(3),
   PLATINUM(4),

@@ -3,6 +3,7 @@ package com.feedback.api.controller;
 import com.feedback.api.dto.FeedbackDTO;
 import com.feedback.api.model.Feedback;
 import com.feedback.api.service.FeedbackService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,40 +26,41 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Api(description = "General purpose operations")
 @Controller
-@RequestMapping("/feedback-api")
+@RequestMapping
 public class FeedbackController {
 
   @Autowired FeedbackService feedbackService;
 
-  @PostMapping(path = "", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/feedback", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Feedback> create(@RequestBody Feedback body) {
     return ResponseEntity.status(HttpStatus.CREATED).body(feedbackService.create(body));
   }
 
-  @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/feedback/{id}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Feedback> retrieve(@Valid @NotBlank @PathVariable Long id) {
     return ResponseEntity.status(HttpStatus.OK).body(feedbackService.retrieve(id));
   }
 
-  @PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+  @PutMapping(path = "/feedback/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Feedback> update(
       @Valid @NotBlank @PathVariable Long id, @RequestBody FeedbackDTO body) {
     return ResponseEntity.status(HttpStatus.OK).body(feedbackService.update(id, body));
   }
 
-  @DeleteMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
+  @DeleteMapping(path = "/feedback/{id}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Feedback> delete(@Valid @NotBlank @PathVariable Long id) {
     feedbackService.delete(id);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
-  @GetMapping(path = "/order/{orderId}", produces = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/order/{orderId}/feedback", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Feedback> getFeedbackByOrder(@Valid @NotBlank @PathVariable Long orderId) {
     return ResponseEntity.status(HttpStatus.OK).body(feedbackService.retrieve(orderId));
   }
 
-  @GetMapping(path = "/user/{userId}", produces = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/user/{userId}/feedbacks", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Feedback>> getFeedbacksByBuyer(
           @Valid @NotBlank @PathVariable Long userId,
           @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
@@ -68,7 +70,7 @@ public class FeedbackController {
         .body(feedbackService.getAllFeedbacksByBuyerIdBetween(userId, from, to, pageable));
   }
 
-  @GetMapping(path = "/store/{storeId}", produces = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/store/{storeId}/feedbacks", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Feedback>> getFeedbacksByStore(
       @Valid @NotBlank @PathVariable String storeId,
       @NotBlank @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,

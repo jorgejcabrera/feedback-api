@@ -43,18 +43,18 @@ public class FeedbackRepositoryTest {
 
   @Test
   public void when_createFeedbackEntity_thenShouldWorkOk() {
-    Feedback feedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback feedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     feedbackRepository.save(feedback);
     assertThat(feedbackRepository.existsById(feedback.getOrderId())).isTrue();
   }
 
   @Test
   public void when_createFeedbacksEntity_thenShouldReturnAllList() {
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.DELETE));
-    feedbackRepository.save(buildFeedback(Score.BRONCE, FeedbackStatus.DELETE));
+    feedbackRepository.save(buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT));
+    feedbackRepository.save(buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT));
+    feedbackRepository.save(buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT));
+    feedbackRepository.save(buildFeedback(Score.BRONZE, FeedbackStatus.DELETE));
+    feedbackRepository.save(buildFeedback(Score.BRONZE, FeedbackStatus.DELETE));
 
     assertThat(feedbackRepository.findAllByStoreIdAndStatus("AR1", FeedbackStatus.PENDING_REPORT))
         .hasSize(3);
@@ -67,11 +67,11 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
     Pageable pageable = PageRequest.of(0, 2);
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback oneFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
-    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback twoFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
-    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback threeFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setBuyerId(buyerId);
     List<Feedback> allFeedbacks = Arrays.asList(oneFeedback, twoFeedback, threeFeedback);
 
@@ -91,13 +91,13 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
     Pageable pageable = PageRequest.of(1, 2);
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback oneFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
-    Feedback twoFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback twoFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
-    Feedback threeFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback threeFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     threeFeedback.setBuyerId(buyerId);
-    Feedback fourFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback fourFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     fourFeedback.setBuyerId(buyerId);
     List<Feedback> allFeedbacks =
         Arrays.asList(oneFeedback, twoFeedback, threeFeedback, fourFeedback);
@@ -118,7 +118,7 @@ public class FeedbackRepositoryTest {
     // given
     Long buyerId = 1L;
 
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback oneFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setBuyerId(buyerId);
     Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setBuyerId(2L);
@@ -148,7 +148,7 @@ public class FeedbackRepositoryTest {
   @Test
   public void when_getAllDistinctStoresFromFeedbackTable_thenShouldWorkOk() {
     // given
-    Feedback oneFeedback = buildFeedback(Score.BRONCE, FeedbackStatus.PENDING_REPORT);
+    Feedback oneFeedback = buildFeedback(Score.BRONZE, FeedbackStatus.PENDING_REPORT);
     oneFeedback.setStoreId("AR1");
     Feedback twoFeedback = buildFeedback(Score.DIAMOND, FeedbackStatus.PENDING_REPORT);
     twoFeedback.setStoreId("AR2");
@@ -176,7 +176,7 @@ public class FeedbackRepositoryTest {
     Feedback feedback = new Feedback();
     feedback.setStoreId(storeId);
     feedback.setOrderId(nextOrderId++);
-    feedback.setScore(Score.BRONCE);
+    feedback.setScore(Score.BRONZE);
     feedback.setCreatedDate(new Date());
     feedback.setLastModifiedDate(new Date());
     feedback.setScore(score);

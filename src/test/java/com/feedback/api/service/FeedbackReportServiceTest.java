@@ -56,10 +56,10 @@ public class FeedbackReportServiceTest {
     // given
     String storeId = "AR1";
     Feedback oneFeedback =
-        new FeedbackBuilder().withScore(Score.BRONCE).withStoreId(storeId).withOrderId(1L).build();
+        new FeedbackBuilder().withScore(Score.BRONZE).withStoreId(storeId).withOrderId(1L).build();
 
     FeedbackReport report = new FeedbackReport();
-    report.addPoints((long) Score.BRONCE.getValue());
+    report.addPoints((long) Score.BRONZE.getValue());
     report.addPoints((long) Score.DIAMOND.getValue());
     report.increaseTotalCount(2);
     report.buildRank();
